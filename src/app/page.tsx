@@ -1,10 +1,14 @@
+import Navbar from "@/components/Navbar";
+import Hero from "@/components/Hero";
 
 
 export default function Home() {
   return (
-    <div>
-      <h2> this is the Home page</h2>
-
+    <div className="flex flex-col">
+      <Navbar />
+      <main className="flex-grow">
+        <Hero />
+      </main>
     </div>
   );
 }
