@@ -7,6 +7,7 @@ import FeaturedStudios from "@/components/FeaturedStudio";
 import HostGuarantee from "@/components/HostGuarantee";
 
 
+
 export default function Home() {
   return (
     <div className="flex flex-col">
@@ -19,6 +20,9 @@ export default function Home() {
 
         <HowItWorks />
         <HostGuarantee />
+
+
+
       </main>
     </div>
   );
