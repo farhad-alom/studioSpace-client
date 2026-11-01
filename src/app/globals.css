@@ -121,10 +121,33 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+
   html {
     @apply font-sans;
+    scroll-behavior: smooth;
+  }
+}
+
+.hero-swiper {
+  --swiper-navigation-color: #fff;
+  --swiper-pagination-color: #fff;
+  --swiper-pagination-bullet-inactive-color: #fff;
+  --swiper-pagination-bullet-inactive-opacity: 0.5;
+}
+
+.hero-swiper .swiper-button-next,
+.hero-swiper .swiper-button-prev {
+  display: none;
+}
+
+@media (min-width: 640px) {
+
+  .hero-swiper .swiper-button-next,
+  .hero-swiper .swiper-button-prev {
+    display: flex;
   }
 }

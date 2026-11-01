@@ -1,4 +1,3 @@
-
 "use client"
 
 import * as React from "react"
@@ -8,7 +7,7 @@ import { usePathname } from "next/navigation"
 import { LogOut, Menu, Moon, Sun, X } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet"
 import { useTheme } from "@/lib/theme-provider"
 import { useAuth } from "@/lib/auth-provider"
 import { cn } from "@/lib/utils"
@@ -16,7 +15,7 @@ import { cn } from "@/lib/utils"
 const NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/studios", label: "Explore Studios" },
-  { href: "/how-it-works", label: "How It Works" },
+  { href: "/#how-it-works", label: "How It Works" },
   { href: "/about-us", label: "About Us" },
 ]
 
@@ -32,124 +31,100 @@ export default function Navbar() {
     setMounted(true)
   }, [])
 
-  // Keep the first server and client render consistent.
-  const logoSrc =
-    mounted && theme === "dark"
-      ? "/nav-logo.png"
-      : "/nav-logo-light.png"
-
-  const themeButton = (
-    <Button
-      variant="outline"
-      size="icon"
-      onClick={toggleTheme}
-      aria-label="Toggle theme"
-    >
-      {mounted && theme === "dark" ? (
-        <Sun className="size-5" />
-      ) : (
-        <Moon className="size-5" />
-      )}
-    </Button>
-  )
+  // লাইট থিমে Dark Text Logo এবং ডার্ক থিমে Light Text Logo লোড হবে
+  const isDark = mounted && theme === "dark"
+  const logoSrc = isDark ? "/nav-logo.png" : "/nav-logo-light.png"
 
   return (
     <nav className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 md:px-6">
 
-        {/* Logo */}
-        <Link href="/" className="shrink-0 mx-2 px-3 py-2">
+        {/* Logo Section */}
+        <Link href="/" className="shrink-0 p-1">
           <Image
             src={logoSrc}
             alt="StudioSpace Logo"
-            width={200}
-            height={65}
+            width={180}
+            height={50}
             priority
-            className="h-12 w-auto object-contain transition-transform hover:scale-105"
+            className="h-10 w-auto object-contain transition-transform hover:scale-105"
           />
         </Link>
 
-        {/* Desktop Navigation */}
-        <div className="hidden items-center gap-7 md:flex">
+        {/* Desktop Nav Items */}
+        <div className="hidden items-center gap-6 md:flex">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               className={cn(
-                "text-base font-semibold transition-colors",
-                pathname === link.href
-                  ? "text-primary"
-                  : "text-foreground/75 hover:text-primary"
+                "text-sm font-semibold transition-colors hover:text-primary",
+                pathname === link.href ? "text-primary" : "text-muted-foreground"
               )}
             >
               {link.label}
             </Link>
           ))}
 
-          {themeButton}
+          {/* Theme Switcher Button */}
+          <Button variant="ghost" size="icon" onClick={toggleTheme} aria-label="Toggle theme">
+            {isDark ? <Sun className="size-5" /> : <Moon className="size-5" />}
+          </Button>
 
+          {/* Auth Button */}
           {isAuthenticated ? (
             <div className="flex items-center gap-3">
-              <span className="text-sm font-medium text-foreground">
-                {user?.name}
-              </span>
-              <Button variant="outline" onClick={logout}>
-                <LogOut className="mr-2 size-4" />
-                Log out
+              <span className="text-sm font-medium">{user?.name}</span>
+              <Button variant="outline" size="sm" onClick={logout}>
+                <LogOut className="mr-2 size-4" /> Log out
               </Button>
             </div>
           ) : (
-            <Button asChild>
+            <Button size="sm">
               <Link href="/login">Log in</Link>
             </Button>
           )}
         </div>
 
-        {/* Mobile Navigation */}
+        {/* Mobile Nav Button */}
         <div className="flex items-center gap-2 md:hidden">
-          {themeButton}
+          <Button variant="ghost" size="icon" onClick={toggleTheme} aria-label="Toggle theme">
+            {isDark ? <Sun className="size-5" /> : <Moon className="size-5" />}
+          </Button>
 
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => setMenuOpen(true)}
-            aria-label="Open menu"
-          >
+          <Button variant="outline" size="icon" onClick={() => setMenuOpen(true)} aria-label="Open menu">
             <Menu className="size-5" />
           </Button>
 
+          {/* Mobile Sheet Menu */}
           <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
-            <SheetContent side="right" className="w-[300px]">
-              <div className="mb-8 flex justify-between">
+            <SheetContent side="right" className="w-[280px] p-5">
+              <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+
+              <div className="mb-6 flex items-center justify-between">
                 <Image
                   src={logoSrc}
                   alt="StudioSpace Logo"
-                  width={160}
-                  height={55}
-                  className="h-10 w-auto object-contain"
+                  width={140}
+                  height={40}
+                  className="h-8 w-auto object-contain"
                 />
-
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setMenuOpen(false)}
-                  aria-label="Close menu"
-                >
+                <Button variant="ghost" size="icon" onClick={() => setMenuOpen(false)} aria-label="Close menu">
                   <X className="size-5" />
                 </Button>
               </div>
 
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-2">
                 {NAV_LINKS.map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}
                     onClick={() => setMenuOpen(false)}
                     className={cn(
-                      "rounded-lg px-4 py-3 text-base font-semibold",
+                      "rounded-md px-3 py-2 text-sm font-medium transition-colors",
                       pathname === link.href
                         ? "bg-primary text-primary-foreground"
-                        : "text-foreground hover:bg-muted"
+                        : "hover:bg-muted"
                     )}
                   >
                     {link.label}
@@ -160,21 +135,17 @@ export default function Navbar() {
                   {isAuthenticated ? (
                     <Button
                       variant="outline"
-                      className="w-full"
+                      className="w-full justify-start"
                       onClick={() => {
                         logout()
                         setMenuOpen(false)
                       }}
                     >
-                      <LogOut className="mr-2 size-4" />
-                      Log out
+                      <LogOut className="mr-2 size-4" /> Log out
                     </Button>
                   ) : (
-                    <Button asChild className="w-full">
-                      <Link
-                        href="/login"
-                        onClick={() => setMenuOpen(false)}
-                      >
+                    <Button className="w-full">
+                      <Link href="/login" onClick={() => setMenuOpen(false)}>
                         Log in
                       </Link>
                     </Button>
@@ -184,6 +155,7 @@ export default function Navbar() {
             </SheetContent>
           </Sheet>
         </div>
+
       </div>
     </nav>
   )
