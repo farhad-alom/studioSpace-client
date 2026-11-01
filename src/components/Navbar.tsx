@@ -24,12 +24,12 @@ export default function Navbar() {
   const { user, logout, isAuthenticated } = useAuth()
   const pathname = usePathname()
 
-  const [menuOpen, setMenuOpen] = React.useState(false)
-  const [mounted, setMounted] = React.useState(false)
-
-  React.useEffect(() => {
-    setMounted(true)
-  }, [])
+  const [menuOpen, setMenuOpen] = React.useState(false);
+  const mounted = React.useSyncExternalStore(
+    () => () => { },
+    () => true,
+    () => false
+  );
 
   // লাইট থিমে Dark Text Logo এবং ডার্ক থিমে Light Text Logo লোড হবে
   const isDark = mounted && theme === "dark"
