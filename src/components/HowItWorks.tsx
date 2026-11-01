@@ -34,7 +34,7 @@ export default function HowItWorks() {
   return (
     <section id="how-it-works" className="mx-auto max-w-7xl px-4 py-16">
       <div className="mb-10 text-center">
-        <h2 className="mb-3 text-3xl font-bold">How Booking Works</h2>
+        <h2 className="mb-3 text-3xl font-bold">How It Works</h2>
         <p className="mx-auto max-w-2xl text-muted-foreground">
           From finding the perfect space to hitting record, it takes just four simple steps.
         </p>
@@ -58,7 +58,7 @@ export default function HowItWorks() {
       </div>
 
       <div className="mt-10 text-center">
-        <Button asChild size="lg">
+        <Button size="lg">
           <Link href="/studios">Explore Studios</Link>
         </Button>
       </div>

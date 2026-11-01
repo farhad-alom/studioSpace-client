@@ -29,13 +29,16 @@ export default function FeaturedStudios() {
     useEffect(() => {
         const controller = new AbortController();
 
-        fetch(`${API_URL}/api/studios?limit=6`, { signal: controller.signal })
+        // এখানে আর ?limit=6 দেওয়ার দরকার নেই, ব্যাকএন্ড থেকে সব আসবে
+        fetch(`${API_URL}/api/studios`, { signal: controller.signal })
             .then((res) => {
                 if (!res.ok) throw new Error("Failed");
                 return res.json();
             })
             .then((data) => {
-                setStudios(Array.isArray(data) ? data : []);
+                const allStudios = Array.isArray(data) ? data : [];
+                // ফ্রন্টএন্ডে শুধু প্রথম ৬টি দেখানোর জন্য slice ব্যবহার করা হলো
+                setStudios(allStudios.slice(0, 6));
                 setLoading(false);
             })
             .catch((err) => {
@@ -92,7 +95,7 @@ export default function FeaturedStudios() {
                                 </div>
                             </CardContent>
                             <CardFooter>
-                                <Button asChild className="w-full">
+                                <Button className="w-full">
                                     <Link href={`/studios/${s._id}`}>View Details</Link>
                                 </Button>
                             </CardFooter>
@@ -102,7 +105,7 @@ export default function FeaturedStudios() {
             )}
 
             <div className="mt-10 text-center">
-                <Button asChild size="lg">
+                <Button size="lg">
                     <Link href="/studios">Explore All Studios</Link>
                 </Button>
             </div>
