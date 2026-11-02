@@ -13,6 +13,7 @@ import { useAuth } from "@/lib/auth-provider";
 import { uploadImage } from "@/lib/upload-image";
 import { cn } from "@/lib/utils";
 import type { Studio } from "@/types/studio";
+import { apiFetch } from "@/lib/api";
 
 const CATEGORIES = ["Photo Studio", "Film Stage", "Podcast Lounge", "Music Suite", "Workshop"];
 const AMENITIES = ["Wi-Fi", "Air Conditioning", "Parking", "Green Screen", "Cyc Wall", "Studio Lights", "Soundproofing", "Microphones", "Mixing Console", "Makeup Room", "Props", "Coffee & Snacks"];
@@ -62,10 +63,9 @@ export default function StudioForm({ studio }: { studio?: Studio }) {
                 overview: form.get("overview"),
             };
 
-            const url = `${process.env.NEXT_PUBLIC_API_URL}/api/studios${isEdit ? `/${studio!._id}` : ""}`;
-            const res = await fetch(url, {
+            const url = `/api/studios${isEdit ? `/${studio!._id}` : ""}`;
+            const res = await apiFetch(url, {
                 method: isEdit ? "PUT" : "POST",
-                credentials: "include",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(body),
             });
