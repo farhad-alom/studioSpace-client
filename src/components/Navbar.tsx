@@ -98,7 +98,7 @@ export default function Navbar() {
 
           {/* Mobile Sheet Menu */}
           <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
-            <SheetContent side="right" className="w-[280px] p-5">
+            <SheetContent side="right" className="w-70 p-5">
               <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
 
               <div className="mb-6 flex items-center justify-between">
