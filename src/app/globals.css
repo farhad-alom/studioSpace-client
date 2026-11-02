@@ -151,3 +151,9 @@
     display: flex;
   }
 }
+
+[data-sonner-toast] [data-close-button] {
+  left: auto !important;
+  right: 0 !important;
+  transform: translate(35%, -35%) !important;
+}

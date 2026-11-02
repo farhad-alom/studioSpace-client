@@ -34,7 +34,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
     : null
 
+  const userId = user?.id
+
+  React.useEffect(() => {
+    if (!userId) return
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/jwt`, {
+      method: "POST",
+      credentials: "include",
+    }).catch(() => { })
+  }, [userId])
+
   const logout = async () => {
+
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/jwt/clear`, {
+      method: "POST",
+      credentials: "include",
+    }).catch(() => { })
+
+
     await authClient.signOut()
     toast.success("Logged out successfully")
     router.push("/")

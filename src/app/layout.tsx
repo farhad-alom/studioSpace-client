@@ -38,7 +38,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             {children}
 
             <Footer />
-            <Toaster richColors position="top-right" />
+            <Toaster richColors closeButton position="top-right" />
           </AuthProvider>
         </ThemeProvider>
       </body>
