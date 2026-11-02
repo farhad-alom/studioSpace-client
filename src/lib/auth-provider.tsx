@@ -1,62 +1,57 @@
 "use client"
 
 import * as React from "react"
-import { createContext, useContext, useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+import { toast } from "sonner"
+import { authClient } from "@/lib/auth-client"
 
-export interface StudioUser {
+export type StudioUser = {
   id: string
   name: string
   email: string
+  image?: string | null
 }
 
-interface AuthContextType {
+type AuthContextType = {
   user: StudioUser | null
-  login: (user: StudioUser) => void
-  logout: () => void
   isAuthenticated: boolean
+  loading: boolean
+  logout: () => Promise<void>
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined)
-
-const AUTH_STORAGE_KEY = "studio-space-auth"
+const AuthContext = React.createContext<AuthContextType | null>(null)
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<StudioUser | null>(null)
-  const [mounted, setMounted] = useState(false)
+  const router = useRouter()
+  const { data: session, isPending } = authClient.useSession()
 
-  useEffect(() => {
-    setMounted(true)
-    const stored = localStorage.getItem(AUTH_STORAGE_KEY)
-    if (stored) {
-      try {
-        setUser(JSON.parse(stored))
-      } catch {
-        // Ignore malformed stored session
-      }
+  const user: StudioUser | null = session?.user
+    ? {
+      id: session.user.id,
+      name: session.user.name,
+      email: session.user.email,
+      image: session.user.image,
     }
-  }, [])
+    : null
 
-  function login(userData: StudioUser) {
-    setUser(userData)
-    localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(userData))
-  }
-
-  function logout() {
-    setUser(null)
-    localStorage.removeItem(AUTH_STORAGE_KEY)
+  const logout = async () => {
+    await authClient.signOut()
+    toast.success("Logged out successfully")
+    router.push("/")
+    router.refresh()
   }
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isAuthenticated: !!user }}>
+    <AuthContext.Provider
+      value={{ user, isAuthenticated: !!user, loading: isPending, logout }}
+    >
       {children}
     </AuthContext.Provider>
   )
 }
 
 export function useAuth() {
-  const ctx = useContext(AuthContext)
-  if (!ctx) {
-    throw new Error("useAuth must be used within an AuthProvider")
-  }
+  const ctx = React.useContext(AuthContext)
+  if (!ctx) throw new Error("useAuth must be used inside AuthProvider")
   return ctx
 }
