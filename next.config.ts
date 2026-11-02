@@ -3,6 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   reactCompiler: true,
+
   turbopack: {
     rules: {
       "*.css": {
@@ -11,6 +12,22 @@ const nextConfig: NextConfig = {
       },
     },
   },
+
+  images: {
+    remotePatterns: [
+      { protocol: "https", hostname: "**" },
+    ],
+  },
+
+  async rewrites() {
+    return [
+      {
+        source: "/server/:path*",
+        destination: "https://studiospace-server-alpha.vercel.app/:path*",
+      },
+    ]
+  },
+
 };
 
 export default nextConfig;
