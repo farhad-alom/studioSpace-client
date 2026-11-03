@@ -11,17 +11,8 @@ import {
 import PrivateRoute from "@/components/PrivateRoute";
 import BookingCard from "@/components/booking/BookingCard";
 import { apiFetch } from "@/lib/api";
+import type { Booking } from "@/components/booking/BookingCard";
 
-interface Booking {
-    _id: string;
-    studioTitle: string;
-    date: string;
-    status: string;
-    timeSlot?: string;
-    location?: string;
-    price?: number;
-    image?: string;
-}
 
 export default function MyBookingsPage() {
     const [bookings, setBookings] = useState<Booking[]>([]);

@@ -3,7 +3,7 @@
 import { useEffect, useState, Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { FaStar, FaLocationDot } from "react-icons/fa6";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -32,12 +32,15 @@ const CATEGORIES = ["All", "Photo Studio", "Film Stage", "Podcast Lounge", "Musi
 
 function ExploreAllContent() {
     const params = useSearchParams();
+    const router = useRouter();
+
+    // ✅ category comes straight from the URL on every render — always in sync,
+    // no duplicated state and no setState-in-effect needed
+    const category = params.get("category") || "All";
+
     const [studios, setStudios] = useState<Studio[]>([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState("");
-
-    // Explicitly typed as string to prevent type mismatch with Select component
-    const [category, setCategory] = useState<string>(params.get("category") || "All");
 
     useEffect(() => {
         const q = new URLSearchParams();
@@ -71,7 +74,12 @@ function ExploreAllContent() {
                     onChange={(e) => setSearch(e.target.value)}
                     className="sm:max-w-sm"
                 />
-                <Select value={category} onValueChange={(val) => setCategory(val ?? "All")}>
+                <Select
+                    value={category}
+                    onValueChange={(val) =>
+                        router.replace(`/studios?category=${encodeURIComponent(val ?? "All")}`, { scroll: false })
+                    }
+                >
                     <SelectTrigger className="sm:w-56">
                         <SelectValue placeholder="Category" />
                     </SelectTrigger>
@@ -97,7 +105,7 @@ function ExploreAllContent() {
                 <div className="py-20 text-center">
                     <h3 className="mb-2 text-xl font-semibold">No studios found</h3>
                     <p className="mb-6 text-muted-foreground">Try a different category or search term.</p>
-                    <Button onClick={() => { setSearch(""); setCategory("All"); }}>
+                    <Button onClick={() => { setSearch(""); router.replace("/studios", { scroll: false }); }}>
                         Clear Filters
                     </Button>
                 </div>

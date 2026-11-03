@@ -29,16 +29,14 @@ export default function FeaturedStudios() {
     useEffect(() => {
         const controller = new AbortController();
 
-        // এখানে আর ?limit=6 দেওয়ার দরকার নেই, ব্যাকএন্ড থেকে সব আসবে
-        fetch(`${API_URL}/api/studios`, { signal: controller.signal })
+
+        fetch(`${API_URL}/api/studios?limit=6`, { signal: controller.signal })
             .then((res) => {
                 if (!res.ok) throw new Error("Failed");
                 return res.json();
             })
             .then((data) => {
-                const allStudios = Array.isArray(data) ? data : [];
-                // ফ্রন্টএন্ডে শুধু প্রথম ৬টি দেখানোর জন্য slice ব্যবহার করা হলো
-                setStudios(allStudios.slice(0, 6));
+                setStudios(Array.isArray(data) ? data : []);
                 setLoading(false);
             })
             .catch((err) => {

@@ -13,7 +13,8 @@ type Studio = {
     category: string;
     hourlyRate: number;
     securityDeposit?: number;
-    capacity?: number;
+    // capacity?: number;
+    maxCapacity?: number;
     location: string;
     image: string;
     gallery?: string[];
@@ -63,9 +64,10 @@ export default async function StudioDetailsPage({
                         <span className="flex items-center gap-1">
                             <FaStar className="text-yellow-500" /> {studio.rating ?? "New"}
                         </span>
-                        {studio.capacity && (
+
+                        {studio.maxCapacity && (
                             <span className="flex items-center gap-1">
-                                <FaUsers /> Up to {studio.capacity} people
+                                <FaUsers /> Up to {studio.maxCapacity} people
                             </span>
                         )}
                     </div>
