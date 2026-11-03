@@ -8,8 +8,8 @@
 
 - **Live Site (Client):** [StudioSpace Client](https://studio-space-client-five.vercel.app)
 - **Live API (Server):** `https://studiospace-server-alpha.vercel.app/`
-- **Client Repository:** `PASTE_CLIENT_GITHUB_REPO_LINK_HERE`
-- **Server Repository:** `PASTE_SERVER_GITHUB_REPO_LINK_HERE`
+- **Client Repository:** `https://github.com/farhad-alom/studioSpace-client`
+- **Server Repository:** `https://github.com/farhad-alom/studioSpace-serverE`
 
 ---
 
