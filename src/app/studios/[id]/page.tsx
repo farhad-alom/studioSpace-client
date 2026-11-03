@@ -82,7 +82,14 @@ export default async function StudioDetailsPage({
                         <FaShieldHalved className="text-2xl text-muted-foreground" />
                     </div>
 
-                    <BookStudioButton title={studio.title} rate={studio.hourlyRate} />
+                    <BookStudioButton
+                        studioId={studio._id}
+                        title={studio.title}
+                        category={studio.category}
+                        location={studio.location}
+                        image={studio.image}
+                        rate={studio.hourlyRate}
+                    />
                 </div>
             </div>
 

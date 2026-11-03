@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+﻿import { Button } from "@/components/ui/button";
 
 const COLORS: Record<string, string> = {
     Pending: "bg-yellow-500/15 text-yellow-600",
@@ -14,12 +14,15 @@ export default function BookingCard({ booking, onCancel }: { booking: any; onCan
             <div className="flex-1">
                 <h3 className="text-lg font-semibold">{booking.studioTitle}</h3>
                 <p className="text-sm text-muted-foreground">
+                    {booking.studioCategory || booking.category || "—"} · {booking.studioLocation || booking.location || "—"}
+                </p>
+                <p className="text-sm text-muted-foreground">
                     {booking.date} · {booking.startTime} - {booking.endTime}
                 </p>
                 <p className="font-medium">Total: ${booking.totalPrice}</p>
             </div>
             <div className="flex flex-col items-start gap-2 sm:items-end">
-                <span className={`rounded-full px-3 py-1 text-xs font-medium ${COLORS[booking.status]}`}>
+                <span className={`rounded-full px-3 py-1 text-xs font-medium ${COLORS[booking.status] || "bg-muted text-muted-foreground"}`}>
                     {booking.status}
                 </span>
                 {booking.status === "Pending" && (
