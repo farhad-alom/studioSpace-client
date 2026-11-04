@@ -5,7 +5,16 @@ import { Card, CardContent } from "@/components/ui/card";
 import StudioGallery from "@/components/StudioGallery";
 import BookStudioButton from "@/components/BookStudioButton";
 
-const API_URL = "";
+/**
+ * Absolute API base.
+ *
+ * Root cause note: RSC fetches must NOT use a relative "/api/..." URL.
+ * `next.config.ts` rewrites only apply to browser requests, so a relative
+ * fetch here hit the Next.js server's nonexistent /api/studios/[id] route,
+ * `res.ok` was false, `getStudio` returned null, and valid ids rendered
+ * `notFound()`. An absolute base (local dev = localhost:5000) fixes all of it.
+ */
+const API_URL = process.env.SERVER_URL || "https://studiospace-server-alpha.vercel.app";
 
 type Studio = {
     _id: string;

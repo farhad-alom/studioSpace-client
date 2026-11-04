@@ -93,9 +93,9 @@ export default function FeaturedStudios() {
                                 </div>
                             </CardContent>
                             <CardFooter>
-                                <Button className="w-full">
-                                    <Link href={`/studios/${s._id}`}>View Details</Link>
-                                </Button>
+                                <Link href={`/studios/${s._id}`}>
+                                    <Button className="w-full">View Details</Button>
+                                </Link>
                             </CardFooter>
                         </Card>
                     ))}
