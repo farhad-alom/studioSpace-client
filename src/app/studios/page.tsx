@@ -51,7 +51,7 @@ function ExploreAllContent() {
 
         const timer = setTimeout(() => {
             setLoading(true);
-            fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/studios${queryString}`)
+            fetch(`/api/studios${queryString}`)
                 .then((res) => res.json())
                 .then((data) => setStudios(Array.isArray(data) ? data : []))
                 .catch(() => setStudios([]))

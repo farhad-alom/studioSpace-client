@@ -9,7 +9,7 @@
 - **Live Site (Client):** [StudioSpace Client](https://studio-space-client-five.vercel.app)
 - **Live API (Server):** `https://studiospace-server-alpha.vercel.app/`
 - **Client Repository:** `https://github.com/farhad-alom/studioSpace-client`
-- **Server Repository:** `https://github.com/farhad-alom/studioSpace-serverE`
+- **Server Repository:** `https://github.com/farhad-alom/studioSpace-server`
 
 ---
 
@@ -119,7 +119,7 @@ The server should run at `http://localhost:5000` (assuming the configured port i
 Clone the client repository and install dependencies:
 
 ```bash
-git clone PASTE_CLIENT_GITHUB_REPO_LINK_HERE
+git clone https://github.com/farhad-alom/studioSpace-client
 cd client
 npm install
 ```
@@ -147,24 +147,11 @@ Use the account below to test login and private pages (Add Studio, My Listings, 
 
 | Role | Email | Password |
 | --- | --- | --- |
-| General User | `PASTE_TEST_EMAIL_HERE` | `PASTE_TEST_PASSWORD_HERE` |
+| General User | `Ten@gmail.com` | `Ten@gmail.com` |
+
+
 
 You can also register a new account. Passwords must contain at least one uppercase letter, one lowercase letter, and at least six characters. Google login is available when OAuth credentials are configured.
 
----
-
-## 📄 Submission Checklist
-
-- [ ] Client and server GitHub repositories submitted
-- [ ] Live client website deployed and accessible
-- [ ] Live API URL added to this README
-- [ ] Client and server repository URLs added
-- [ ] Private routes reload without errors and preserve authenticated sessions
-- [ ] No Lorem Ipsum text
-- [ ] No default browser `alert()`; use Sonner toasts and custom modals
-- [ ] At least 15 notable client-side commits
-- [ ] At least 8 notable server-side commits
-
----
 
 © 2026 StudioSpace. All rights reserved.

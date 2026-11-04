@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import StudioGallery from "@/components/StudioGallery";
 import BookStudioButton from "@/components/BookStudioButton";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+const API_URL = "";
 
 type Studio = {
     _id: string;

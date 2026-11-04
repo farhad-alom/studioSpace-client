@@ -20,13 +20,8 @@ const nextConfig: NextConfig = {
   },
 
   async rewrites() {
-    return [
-      {
-        source: "/server/:path*",
-        destination: "https://studiospace-server-alpha.vercel.app/:path*",
-      },
-    ]
-  },
+    return [{ source: "/api/:path*", destination: "https://studiospace-server-alpha.vercel.app/api/:path*" }];
+  }
 
 };
 

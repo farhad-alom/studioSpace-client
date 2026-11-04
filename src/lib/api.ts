@@ -1,4 +1,4 @@
-﻿const API = process.env.NEXT_PUBLIC_API_URL
+﻿const API = process.env.NEXT_PUBLIC_API_URL || ""
 
 const send = (path: string, init: RequestInit) =>
     fetch(`${API}${path}`, { credentials: "include", ...init })

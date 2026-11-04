@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { FcGoogle } from "react-icons/fc";
 import { authClient } from "@/lib/auth-client";
+import { useAuth } from "@/lib/auth-provider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -21,7 +22,29 @@ function validatePassword(pw: string) {
 export default function RegisterPage() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
+    const [googleLoading, setGoogleLoading] = useState(false);
     const [passwordError, setPasswordError] = useState("");
+
+    const { isAuthenticated, loading: authLoading } = useAuth();
+
+    // Google sign-in failed/cancelled -> show toast
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+
+        if (params.get("auth_error")) {
+            toast.error(
+                "Google sign-in failed or was cancelled. Please try again."
+            );
+        }
+    }, []);
+
+    // already authenticated? never show the register form
+    useEffect(() => {
+        if (!authLoading && isAuthenticated) {
+            const params = new URLSearchParams(window.location.search);
+            router.replace(params.get("redirect") || "/");
+        }
+    }, [authLoading, isAuthenticated, router]);
 
     const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -54,11 +77,26 @@ export default function RegisterPage() {
     };
 
     const handleGoogle = async () => {
-        const { error } = await authClient.signIn.social({
-            provider: "google",
-            callbackURL: "/",
-        });
-        if (error) toast.error(error.message || "Google sign-in failed.");
+        // honor ?redirect= (e.g. came from a protected route), otherwise Home
+        const params = new URLSearchParams(window.location.search);
+        const redirectTo = params.get("redirect") || "/";
+
+        setGoogleLoading(true);
+        try {
+            const { error } = await authClient.signIn.social({
+                provider: "google",
+                callbackURL: redirectTo,
+                errorCallbackURL: `/register?auth_error=1&redirect=${encodeURIComponent(redirectTo)}`,
+            });
+
+            if (error) {
+                setGoogleLoading(false);
+                toast.error(error.message || "Google sign-in failed.");
+            }
+        } catch {
+            setGoogleLoading(false);
+            toast.error("Google sign-in failed.");
+        }
     };
 
     return (
@@ -111,8 +149,14 @@ export default function RegisterPage() {
                         <span className="h-px flex-1 bg-border" />
                     </div>
 
-                    <Button variant="outline" className="w-full" onClick={handleGoogle}>
-                        <FcGoogle className="mr-2 text-lg" /> Continue with Google
+                    <Button
+                        variant="outline"
+                        className="w-full"
+                        onClick={handleGoogle}
+                        disabled={googleLoading}
+                    >
+                        <FcGoogle className="mr-2 text-lg" />
+                        {googleLoading ? "Redirecting..." : "Continue with Google"}
                     </Button>
 
                     <p className="mt-6 text-center text-sm text-muted-foreground">
