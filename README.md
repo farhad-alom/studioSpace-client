@@ -1,28 +1,31 @@
 # 🎬 StudioSpace — Peer-to-Peer Creative Workspace & Production Studio Sharing Platform
 
-**StudioSpace** is a full-stack marketplace where creators—photographers, filmmakers, podcasters, musicians, and artists—can discover, filter, and book professional creative studios by the hour. Studio owners can list, update, and manage their own spaces with booking management.
+**StudioSpace** is a full-stack marketplace where photographers, filmmakers, podcasters, musicians and artists can discover, filter and book professional creative studios by the hour. Studio owners can list, update and manage their own spaces.
 
 ---
 
 ## 🔗 Important Links
 
 - **Live Site (Client):** [StudioSpace Client](https://studio-space-client-five.vercel.app)
-- **Live API (Server):** `https://studiospace-server-alpha.vercel.app/`
-- **Client Repository:** `https://github.com/farhad-alom/studioSpace-client`
-- **Server Repository:** `https://github.com/farhad-alom/studioSpace-server`
+- **Live API (Server):** https://studiospace-server-alpha.vercel.app/
+- **Client Repository:** https://github.com/farhad-alom/studioSpace-client
+- **Server Repository:** https://github.com/farhad-alom/studioSpace-server
 
 ---
 
 ## ✨ Key Features
 
-- **Explore & Book Studios** — Search by title or location, filter by category (Photo Studio, Film Stage, Podcast Lounge, Music Suite, Workshop), and book studios with date and time-slot selection plus live hourly price calculation.
-- **Secure JWT Authentication (HTTPOnly Cookie)** — Email/password authentication, Google social login, and registration with password rules (uppercase letter, lowercase letter, and at least 6 characters). The Better Auth JWT session is stored in an **HTTPOnly cookie**. Protected APIs reject unauthorized requests with **401 Unauthorized**.
-- **Full Studio CRUD with Ownership Protection** — Authenticated hosts can add studios (with imgbb image upload), edit pre-filled forms, and delete listings with a confirmation modal. The server verifies ownership for updates and deletions.
-- **Smart Booking System with Double-Booking Prevention** — New bookings are saved with `Pending` status and display `Pending`, `Confirmed`, `Completed`, or `Cancelled` statuses. Before saving a reservation, the server checks for time overlaps with existing `Confirmed` bookings and rejects conflicts with a clear error.
-- **Interactive Hero Slider & Dynamic Home Page** — A Swiper.js slider with three slides, dynamically fetched featured studios (the six newest), clickable category cards that link to pre-filtered results, plus “How Booking Works” and “Host Guarantee” sections.
-- **Dark / Light Theme Toggle** — One-click full-system theme switching, persisted in `localStorage` and respecting the system preference on first visit.
-- **Modern UX** — Skeleton loaders during data fetching, friendly empty states with calls to action, custom confirmation modals (no default browser `alert()`), and Sonner toast notifications for authentication, CRUD, and booking actions.
-- **Fully Responsive** — Mobile, tablet, and desktop layouts with a sticky navbar, active-route indicators, mobile sheet menu, and user avatar dropdown (Dashboard, Add New Studio, My Listings, My Bookings, Logout).
+- **Explore & Book Studios** — Search by title or location, filter by category (Photo Studio, Film Stage, Podcast Lounge, Music Suite, Workshop), and book with date, time slot and live hourly price calculation.
+- **Secure Authentication** — Email/password and Google login using Better Auth with a JWT session stored in an **HTTPOnly cookie**. Password rules: at least 6 characters, one uppercase and one lowercase letter.
+- **Route Protection (proxy.ts)** — Private routes redirect unauthenticated users to `/login` before the page renders. Logged-in users are redirected away from `/login` and `/register`.
+- **Full Studio CRUD with Ownership Protection** — Add studios (imgbb image upload), edit with a pre-filled form, and delete with a confirmation modal. The server verifies ownership.
+- **Smart Booking System** — Bookings start as `Pending` and can become `Confirmed`, `Completed` or `Cancelled`. The server blocks time overlaps with existing `Confirmed` bookings.
+- **Dashboard** — Personal activity stats and quick action links.
+- **Dynamic Home Page** — Swiper.js hero slider, six newest featured studios, clickable category cards, "How It Works" and "Host Guarantee" sections.
+- **Dark / Light Theme** — One-click theme toggle, saved in `localStorage` and respecting the system preference on first visit.
+- **PDF Invoice Generator** — Confirmed and Completed bookings get a "Download Invoice" button that creates a PDF receipt (jsPDF) fully on the client.
+- **Modern UX** — Skeleton loaders, friendly empty states, custom confirmation modals and Sonner toast notifications.
+- **Fully Responsive** — Mobile, tablet and desktop layouts with a sticky navbar, mobile sheet menu and user avatar dropdown.
 
 ---
 
@@ -30,31 +33,34 @@
 
 | Layer | Technology |
 | --- | --- |
-| Framework | **Next.js 16 (App Router)**, React 19, TypeScript |
+| Framework | Next.js 16 (App Router), React 19, TypeScript |
 | UI & Styling | Tailwind CSS v4, shadcn/ui, Lucide, React Icons |
-| State / Data Fetching | React Hooks, Fetch API (`credentials: "include"`) |
-| Authentication | **Better Auth** (MongoDB adapter), **JWT plugin**, Google OAuth |
-| Backend | **Express.js 5**, Node.js, ES Modules |
-| Database | **MongoDB** (native driver), `StudioCollection`, `BookingCollection` |
+| Authentication | Better Auth (MongoDB adapter, JWT plugin), Google OAuth |
+| Backend | Express.js 5, Node.js, ES Modules |
+| Database | MongoDB (native driver) |
 | Image Storage | imgbb API |
 | Notifications | Sonner |
 | Slider | Swiper.js |
+| PDF | jsPDF |
 | Hosting | Vercel (client and server) |
 
 ---
 
-## 🔐 Security Notes (Challenge Implementations)
+## 🔐 Security Notes
 
-1. **JWT in HTTPOnly Cookie** — The following endpoints are protected by authentication middleware that validates the Better Auth JWT session cookie and returns **401 Unauthorized** for anonymous users:
+1. **JWT in HTTPOnly Cookie** — These endpoints use authentication middleware and return **401 Unauthorized** for anonymous users:
    - `POST /api/studios`
    - `PUT /api/studios/:id`
    - `DELETE /api/studios/:id`
+   - `GET /api/my-studios`
    - `POST /api/bookings`
    - `GET /api/my-bookings`
-   - `GET /api/my-studios`
    - `PATCH /api/bookings/:id/cancel`
-2. **Double-Booking Prevention** — Before saving a reservation, the server checks for overlapping slots using the condition `startTime < requestedEnd && endTime > requestedStart`, considering bookings with `Confirmed` status. Conflicting requests are rejected with an HTTP **409 Conflict** response.
-3. **Ownership Checks** — Users can only edit or delete their own studios and cancel their own bookings. Unauthorized ownership attempts are rejected.
+   - `PATCH /api/bookings/:id/confirm`
+   - `GET /api/dashboard/stats`
+2. **Double-Booking Prevention** — Before saving, the server checks `startTime < requestedEnd && endTime > requestedStart` against `Confirmed` bookings and returns **409 Conflict** on a clash.
+3. **Ownership Checks** — Users can only edit or delete their own studios and manage their own bookings.
+4. **Route Protection** — `proxy.ts` guards private pages on the server side, and `PrivateRoute` acts as a second layer on the client.
 
 ---
 
@@ -64,14 +70,15 @@
 | --- | --- | --- |
 | `/` | Public | Hero slider, featured studios, categories, How It Works, Host Guarantee |
 | `/studios` | Public | Explore studios with search and category filters |
-| `/studios/[id]` | Public | Studio details, gallery, amenities, host information, and booking modal |
+| `/studios/[id]` | Public | Studio details, gallery, amenities, host info and booking modal |
+| `/about-us` | Public | About the platform |
 | `/login` | Public | Email/password and Google login |
 | `/register` | Public | Account creation with password validation |
-| `/add-studio` | Private | Create a studio listing with imgbb image upload |
-| `/studios/edit/[id]` | Private | Update an owned studio using a pre-filled form |
-| `/my-listings` | Private | Manage owned studio listings (update/delete) |
-| `/my-bookings` | Private | View bookings, status badges, and cancel pending bookings |
-| `/about-us` | Public | About the platform |
+| `/dashboard` | Private | Activity stats and quick actions |
+| `/add-studio` | Private | Create a studio listing |
+| `/studios/edit/[id]` | Private | Update an owned studio |
+| `/my-listings` | Private | Manage owned listings (update/delete) |
+| `/my-bookings` | Private | View bookings, confirm, cancel and download invoices |
 
 ---
 
@@ -80,17 +87,15 @@
 ### Prerequisites
 
 - Node.js 20 or newer and npm
-- A MongoDB database (local or MongoDB Atlas connection string)
-- An imgbb API key ([Get an API key](https://api.imgbb.com))
-- Google OAuth Client ID and Secret (optional; required only for Google social login)
+- A MongoDB database (local or Atlas)
+- An imgbb API key ([get one here](https://api.imgbb.com))
+- Google OAuth Client ID and Secret (only needed for Google login)
 
 ### 1. Server Setup
 
-Clone the server repository and install dependencies:
-
 ```bash
-git clone PASTE_SERVER_GITHUB_REPO_LINK_HERE
-cd server
+git clone https://github.com/farhad-alom/studioSpace-server
+cd studioSpace-server
 npm install
 ```
 
@@ -103,33 +108,31 @@ BETTER_AUTH_URL=http://localhost:5000
 CLIENT_URL=http://localhost:3000
 GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
-NODE_ENV=development
 ```
 
-Start the server:
+Start the server (runs at `http://localhost:5000`):
 
 ```bash
 npm run dev
 ```
 
-The server should run at `http://localhost:5000` (assuming the configured port is `5000`).
-
 ### 2. Client Setup
-
-Clone the client repository and install dependencies:
 
 ```bash
 git clone https://github.com/farhad-alom/studioSpace-client
-cd client
+cd studioSpace-client
 npm install
 ```
 
 Create a `.env.local` file in the client root:
 
 ```env
-NEXT_PUBLIC_API_URL=http://localhost:5000
 NEXT_PUBLIC_IMGBB_KEY=your_imgbb_api_key
 ```
+
+> Do **not** set `NEXT_PUBLIC_API_URL`. All API calls use relative `/api/...` URLs that `next.config.ts` rewrites to the backend, which keeps requests same-origin so the session cookie is always sent.
+
+To use your local server, change the rewrite destination in `next.config.ts` to `http://localhost:5000/api/:path*`.
 
 Start the client:
 
@@ -137,21 +140,18 @@ Start the client:
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open [http://localhost:3000](http://localhost:3000).
 
 ---
 
 ## 👤 Examiner Test Credentials
 
-Use the account below to test login and private pages (Add Studio, My Listings, and My Bookings):
-
 | Role | Email | Password |
 | --- | --- | --- |
 | General User | `Ten@gmail.com` | `Ten@gmail.com` |
 
+You can also register a new account. Google login works when OAuth credentials are configured.
 
-
-You can also register a new account. Passwords must contain at least one uppercase letter, one lowercase letter, and at least six characters. Google login is available when OAuth credentials are configured.
-
+---
 
 © 2026 StudioSpace. All rights reserved.

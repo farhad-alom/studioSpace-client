@@ -41,6 +41,22 @@ export default function MyBookingsPage() {
         toast.success("Booking cancelled");
     };
 
+    const handleConfirm = async (id: string) => {
+        const res = await apiFetch(`/api/bookings/${id}/confirm`, { method: "PATCH" });
+        if (!res.ok) {
+            const data = await res.json().catch(() => ({}));
+            return toast.error(data.message || "Confirm failed");
+        }
+        setBookings((list) => list.map((b) => (b._id === id ? { ...b, status: "Confirmed" } : b)));
+        toast.success("Booking confirmed");
+    };
+
+
+
+
+
+
+
     return (
         <PrivateRoute>
             <div className="mx-auto max-w-5xl space-y-4 px-4 py-10">
@@ -58,7 +74,7 @@ export default function MyBookingsPage() {
                 )}
 
                 {bookings.map((b) => (
-                    <BookingCard key={b._id} booking={b} onCancel={() => setTarget(b)} />
+                    <BookingCard key={b._id} booking={b} onCancel={() => setTarget(b)} onConfirm={() => handleConfirm(b._id)} />
                 ))}
 
                 <Dialog open={!!target} onOpenChange={(open) => !open && setTarget(null)}>

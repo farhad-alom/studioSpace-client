@@ -1,5 +1,8 @@
 ﻿import Image from "next/image";
+import { Download } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { generateInvoicePDF } from "@/lib/invoice";
 
 // Shape of one booking document returned by GET /api/my-bookings
 export interface Booking {
@@ -13,11 +16,14 @@ export interface Booking {
     endTime?: string;
     totalPrice?: number;
     status: string;
+    userName?: string | null;
+    userEmail?: string | null;
 }
 
 interface BookingCardProps {
     booking: Booking;
     onCancel: () => void;
+    onConfirm: () => void;
 }
 
 const COLORS: Record<string, string> = {
@@ -27,7 +33,16 @@ const COLORS: Record<string, string> = {
     Cancelled: "bg-red-500/15 text-red-600",
 };
 
-export default function BookingCard({ booking, onCancel }: BookingCardProps) {
+export default function BookingCard({ booking, onCancel, onConfirm }: BookingCardProps) {
+    const handleDownloadInvoice = () => {
+        try {
+            generateInvoicePDF(booking);
+            toast.success("Invoice downloaded");
+        } catch {
+            toast.error("Could not generate invoice");
+        }
+    };
+
     return (
         <div className="flex flex-col gap-4 rounded-xl border p-4 sm:flex-row sm:items-center">
             {booking.studioImage ? (
@@ -57,7 +72,16 @@ export default function BookingCard({ booking, onCancel }: BookingCardProps) {
                     {booking.status}
                 </span>
                 {booking.status === "Pending" && (
-                    <Button variant="outline" onClick={onCancel}>Cancel Booking</Button>
+                    <>
+                        <Button size="sm" onClick={onConfirm}>Confirm Booking</Button>
+                        <Button size="sm" variant="outline" onClick={onCancel}>Cancel Booking</Button>
+                    </>
+                )}
+                {(booking.status === "Confirmed" || booking.status === "Completed") && (
+                    <Button size="sm" variant="outline" onClick={handleDownloadInvoice}>
+                        <Download className="mr-1 h-4 w-4" />
+                        Download Invoice
+                    </Button>
                 )}
             </div>
         </div>

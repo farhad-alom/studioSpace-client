@@ -39,7 +39,7 @@ export default function MobileNav() {
             </Button>
 
             <Sheet open={open} onOpenChange={setOpen}>
-                <SheetContent side="right" className="w-[280px] overflow-y-auto p-5">
+                <SheetContent side="right" className="w-70 overflow-y-auto p-5">
                     <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
 
                     <div className="mb-6 flex items-center justify-between">
