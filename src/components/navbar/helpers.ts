@@ -11,8 +11,6 @@ export function useIsDark() {
     return mounted && theme === "dark"
 }
 
-export const getLogoSrc = (isDark: boolean) =>
-    isDark ? "/nav-logo.png" : "/nav-logo-light.png"
 
 export function isActiveLink(pathname: string, href: string) {
     if (href.includes("#")) return false

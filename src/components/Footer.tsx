@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { toast } from "sonner";
 import { FaXTwitter, FaFacebookF, FaInstagram, FaYoutube } from "react-icons/fa6";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import BrandLogo from "@/components/BrandLogo";
 
 const QUICK_LINKS = [
     { label: "Home", href: "/" },
@@ -48,15 +48,7 @@ export default function Footer() {
             <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:grid-cols-2 lg:grid-cols-4">
                 {/* Brand */}
                 <div className="space-y-4">
-                    <Link href="/" className="inline-block">
-                        <Image
-                            src="/nav-logo.png"
-                            alt="StudioSpace Logo"
-                            width={160}
-                            height={40}
-                            className="h-8 w-auto rounded-md"
-                        />
-                    </Link>
+                    <BrandLogo />
                     <p className="text-sm text-muted-foreground">
                         Our mission is to make professional creative spaces affordable, transparent and
                         available to every creator.

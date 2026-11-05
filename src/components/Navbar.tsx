@@ -1,35 +1,27 @@
 "use client"
 
-import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/lib/auth-provider"
 import { cn } from "@/lib/utils"
+import BrandLogo from "./BrandLogo"
 import MobileNav from "./navbar/MobileNav"
 import ThemeToggle from "./navbar/ThemeToggle"
 import UserDropdown from "./navbar/UserDropdown"
 import { NAV_LINKS } from "./navbar/config"
-import { getLogoSrc, isActiveLink, useIsDark } from "./navbar/helpers"
+import { isActiveLink } from "./navbar/helpers"
 
 export default function Navbar() {
   const pathname = usePathname()
   const { isAuthenticated } = useAuth()
-  const logoSrc = getLogoSrc(useIsDark())
 
   return (
     <nav className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 md:px-6">
-        <Link href="/" className="shrink-0 p-1">
-          <Image
-            src={logoSrc}
-            alt="StudioSpace Logo"
-            width={180}
-            height={50}
-            priority
-            className="h-10 w-auto object-contain transition-transform hover:scale-105"
-          />
-        </Link>
+        <div className="min-w-0 shrink-0">
+          <BrandLogo />
+        </div>
 
         <div className="hidden items-center gap-6 md:flex">
           {NAV_LINKS.map((link) => (

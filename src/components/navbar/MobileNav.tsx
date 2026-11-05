@@ -1,7 +1,6 @@
 "use client"
 
 import * as React from "react"
-import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { LogOut, Menu, X } from "lucide-react"
@@ -9,16 +8,16 @@ import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet"
 import { useAuth } from "@/lib/auth-provider"
 import { cn } from "@/lib/utils"
+import BrandLogo from "../BrandLogo"
 import UserAvatar from "./UserAvatar"
 import ThemeToggle from "./ThemeToggle"
 import { NAV_LINKS, USER_LINKS } from "./config"
-import { getLogoSrc, isActiveLink, useIsDark } from "./helpers"
+import { isActiveLink } from "./helpers"
 
 export default function MobileNav() {
     const [open, setOpen] = React.useState(false)
     const pathname = usePathname()
     const { user, logout, isAuthenticated } = useAuth()
-    const logoSrc = getLogoSrc(useIsDark())
 
     const close = () => setOpen(false)
 
@@ -43,13 +42,7 @@ export default function MobileNav() {
                     <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
 
                     <div className="mb-6 flex items-center justify-between">
-                        <Image
-                            src={logoSrc}
-                            alt="StudioSpace Logo"
-                            width={140}
-                            height={40}
-                            className="h-8 w-auto object-contain"
-                        />
+                        <BrandLogo compact />
                         <Button variant="ghost" size="icon" onClick={close} aria-label="Close menu">
                             <X className="size-5" />
                         </Button>
