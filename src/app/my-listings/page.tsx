@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import PrivateRoute from "@/components/PrivateRoute";
 import ListingCard from "@/components/studio/ListingCard";
+import ListingCardSkeleton from "@/components/studio/ListingCardSkeleton";
 import DeleteModal from "@/components/studio/DeleteModal";
 import { apiFetch } from "@/lib/api";
 import { Studio } from "@/types/studio";
@@ -39,9 +40,11 @@ export default function MyListingsPage() {
             <div className="mx-auto max-w-5xl space-y-4 px-4 py-10">
                 <h1 className="text-3xl font-bold">My Studio Listings</h1>
 
-                {loading && [1, 2, 3].map((i) => (
-                    <div key={i} className="h-40 animate-pulse rounded-xl bg-muted" />
-                ))}
+                {loading && (
+                    <div className="space-y-4" aria-label="Loading studio listings">
+                        {[1, 2, 3].map((i) => <ListingCardSkeleton key={i} />)}
+                    </div>
+                )}
 
                 {!loading && studios.length === 0 && (
                     <div className="rounded-xl border p-10 text-center">
@@ -50,7 +53,7 @@ export default function MyListingsPage() {
                     </div>
                 )}
 
-                {studios.map((s) => (
+                {!loading && studios.map((s) => (
                     <ListingCard key={s._id} studio={s} onDelete={() => setTarget(s)} />
                 ))}
 

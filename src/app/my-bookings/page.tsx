@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import PrivateRoute from "@/components/PrivateRoute";
 import BookingCard from "@/components/booking/BookingCard";
+import BookingCardSkeleton from "@/components/booking/BookingCardSkeleton";
 import { apiFetch } from "@/lib/api";
 import type { Booking } from "@/components/booking/BookingCard";
 
@@ -62,9 +63,11 @@ export default function MyBookingsPage() {
             <div className="mx-auto max-w-5xl space-y-4 px-4 py-10">
                 <h1 className="text-3xl font-bold">My Bookings</h1>
 
-                {loading && [1, 2, 3].map((i) => (
-                    <div key={i} className="h-36 animate-pulse rounded-xl bg-muted" />
-                ))}
+                {loading && (
+                    <div className="space-y-4" aria-label="Loading bookings">
+                        {[1, 2, 3].map((i) => <BookingCardSkeleton key={i} />)}
+                    </div>
+                )}
 
                 {!loading && bookings.length === 0 && (
                     <div className="rounded-xl border p-10 text-center">
@@ -73,7 +76,7 @@ export default function MyBookingsPage() {
                     </div>
                 )}
 
-                {bookings.map((b) => (
+                {!loading && bookings.map((b) => (
                     <BookingCard key={b._id} booking={b} onCancel={() => setTarget(b)} onConfirm={() => handleConfirm(b._id)} />
                 ))}
 
